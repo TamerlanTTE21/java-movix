@@ -1,17 +1,16 @@
 package com.example.javamovix.controller;
 
-
 import com.example.javamovix.model.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserController {
 @RestController
-    @RequestMapping("/users")
-    public class UserControllerResource {
+@RequestMapping("/users")
+@Slf4j
+public class userController {
     private final Map<String, User> users = new HashMap<>();
 
     @GetMapping
@@ -32,4 +31,3 @@ public class UserController {
     }
 }
 
-}
