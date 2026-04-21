@@ -34,6 +34,21 @@ public class UserService {
         return userStorage.update(user);
     }
 
+    public void addFriend(Integer userId, Integer friendId) {
+        if (userId == null || friendId == null) {
+            throw new ValidationException("null");
+        }
+
+        if (userId.equals(friendId) ) {
+            throw new ValidationException("");
+        }
+        User user = userStorage.GetById(userId);
+        User friend = userStorage.GetById(friendId);
+
+        user.getFriends().add(friendId);
+        friend.getFriends().add(userId);
+    }
+
     private void validateUser(User user) {
         if (user.getEmail() == null || !user.getEmail().contains("@")) {
             throw new ValidationException("Email address is invalid");
