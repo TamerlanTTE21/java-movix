@@ -1,8 +1,10 @@
 package com.example.javamovix.controller;
+
 import com.example.javamovix.model.Film;
 import com.example.javamovix.service.FilmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Collection;
 
 
@@ -29,15 +31,21 @@ public class FilmController {
 
     @PutMapping("/{id}/like/{userId}")
     public void addLike(@PathVariable Integer id,
-                        @PathVariable Integer likeId) {
-         filmService.addLike(id, likeId);
+                        @PathVariable Integer userId) {
+        filmService.addLike(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public void removeLike (@PathVariable Integer id,
-                            @PathVariable Integer likeId) {
-        filmService.removeLike(id, likeId);
+    public void removeLike(@PathVariable Integer id,
+                           @PathVariable Integer userId) {
+        filmService.removeLike(id, userId);
     }
+
+//    @GetMapping("/popular")
+//    public Collection<Film>  getPopularFilms(@RequestParam(required = false) Integer count) {
+//    return filmService.getPopularFilms(count);
+//    }
 }
+
 
 

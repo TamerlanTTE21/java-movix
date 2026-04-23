@@ -1,12 +1,18 @@
 package com.example.javamovix.service;
+
 import com.example.javamovix.storage.FilmStorage;
 import com.example.javamovix.exception.NotFoundException;
 import com.example.javamovix.exception.ValidationException;
 import com.example.javamovix.model.Film;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -77,6 +83,18 @@ public class FilmService {
         user.getLikes().remove(likeId);
         friend.getLikes().remove(userId);
     }
+
+//    public Collection<Film> getPopularFilms(Integer count) {
+//
+//        if (count == null) {
+//            count = 10;
+//        }
+//        return findAllFilms().stream()
+//                .sorted(Comparator.comparing(film -> film.getLikes().size()).reversed())
+//                .limit(count)
+//                .toList();
+//    }
+
 
     private void validateFilm(Film film) {
         if (film.getName() == null || film.getName().isEmpty()) {
