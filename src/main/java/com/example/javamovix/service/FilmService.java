@@ -84,16 +84,16 @@ public class FilmService {
         friend.getLikes().remove(userId);
     }
 
-//    public Collection<Film> getPopularFilms(Integer count) {
-//
-//        if (count == null) {
-//            count = 10;
-//        }
-//        return findAllFilms().stream()
-//                .sorted(Comparator.comparing(film -> film.getLikes().size()).reversed())
-//                .limit(count)
-//                .toList();
-//    }
+    public Collection<Film> getPopularFilms(Integer count) {
+        PopularFilmsComparator popularFilmsComparator = new PopularFilmsComparator();
+        if (count == null) {
+            count = 10;
+        }
+        return findAllFilms().stream()
+                .sorted(popularFilmsComparator)
+                .limit(count)
+                .toList();
+    }
 
 
     private void validateFilm(Film film) {

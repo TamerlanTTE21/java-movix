@@ -41,10 +41,10 @@ public class FilmController {
         filmService.removeLike(id, userId);
     }
 
-//    @GetMapping("/popular")
-//    public Collection<Film>  getPopularFilms(@RequestParam(required = false) Integer count) {
-//    return filmService.getPopularFilms(count);
-//    }
+    @GetMapping("/popular")
+    public Collection<Film>  getPopularFilms(@RequestParam(required = false) Integer count) {
+    return filmService.getPopularFilms(count);
+    }
 }
 
 
