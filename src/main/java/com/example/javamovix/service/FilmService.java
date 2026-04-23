@@ -1,5 +1,6 @@
 package com.example.javamovix.service;
-import com.example.javamovix.Interface.FilmStorage;
+import com.example.javamovix.storage.FilmStorage;
+import com.example.javamovix.exception.NotFoundException;
 import com.example.javamovix.exception.ValidationException;
 import com.example.javamovix.model.Film;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +29,53 @@ public class FilmService {
         }
 
         if (!filmStorage.existsById(film.getId())) {
-            throw new ValidationException("Film not found");
+            throw new NotFoundException("Film not found");
         }
         return filmStorage.update(film);
+    }
+
+    public void addLike(Integer userId, Integer likedId) {
+        if (userId == null || likedId == null) {
+            throw new ValidationException("null");
+        }
+
+        if (userId.equals(likedId)) {
+            throw new ValidationException("can't add yourself");
+        }
+
+        if (!filmStorage.existsById(userId)) {
+            throw new NotFoundException("userId not found");
+        }
+        if (!filmStorage.existsById(likedId)) {
+            throw new NotFoundException("friendId not found");
+        }
+        Film user = filmStorage.getById(userId);
+        Film friend = filmStorage.getById(likedId);
+
+        user.getLikes().add(likedId);
+        friend.getLikes().add(userId);
+    }
+
+    public void removeLike(Integer userId, Integer likeId) {
+        if (userId == null || likeId == null) {
+            throw new ValidationException("userId and likeId is null");
+        }
+
+        if (userId.equals(likeId)) {
+            throw new ValidationException("can't remove yourself");
+        }
+
+        if (!filmStorage.existsById(userId)) {
+            throw new NotFoundException("userId not found");
+        }
+        if (!filmStorage.existsById(likeId)) {
+            throw new NotFoundException("friendId not found");
+        }
+        Film user = filmStorage.getById(userId);
+        Film friend = filmStorage.getById(likeId);
+
+        user.getLikes().remove(likeId);
+        friend.getLikes().remove(userId);
     }
 
     private void validateFilm(Film film) {

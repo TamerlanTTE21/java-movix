@@ -1,13 +1,14 @@
 package com.example.javamovix.service;
-
-import com.example.javamovix.Interface.UserStorage;
+import com.example.javamovix.storage.UserStorage;
+import com.example.javamovix.exception.NotFoundException;
 import com.example.javamovix.exception.ValidationException;
 import com.example.javamovix.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -29,7 +30,7 @@ public class UserService {
             throw new ValidationException("User id is required");
         }
         if (!userStorage.existsById(user.getId())) {
-            throw new ValidationException("User is not found");
+            throw new NotFoundException("User is not found");
         }
         return userStorage.update(user);
     }
@@ -39,14 +40,62 @@ public class UserService {
             throw new ValidationException("null");
         }
 
-        if (userId.equals(friendId) ) {
-            throw new ValidationException("");
+        if (userId.equals(friendId)) {
+            throw new ValidationException("can't add yourself");
         }
-        User user = userStorage.GetById(userId);
-        User friend = userStorage.GetById(friendId);
+
+        if (!userStorage.existsById(userId)) {
+            throw new NotFoundException("userId not found");
+        }
+        if (!userStorage.existsById(friendId)) {
+            throw new NotFoundException("friendId not found");
+        }
+        User user = userStorage.getById(userId);
+        User friend = userStorage.getById(friendId);
 
         user.getFriends().add(friendId);
         friend.getFriends().add(userId);
+    }
+
+    public void removeFriend(Integer userId, Integer friendId) {
+        if (userId == null || friendId == null) {
+            throw new ValidationException("userId and friendId is null");
+        }
+
+        if (userId.equals(friendId)) {
+            throw new ValidationException("can't remove yourself");
+        }
+
+        if (!userStorage.existsById(userId)) {
+            throw new NotFoundException("userId not found");
+        }
+        if (!userStorage.existsById(friendId)) {
+            throw new NotFoundException("friendId not found");
+        }
+        User user = userStorage.getById(userId);
+        User friend = userStorage.getById(friendId);
+
+        user.getFriends().remove(friendId);
+        friend.getFriends().remove(userId);
+    }
+
+    public Collection<User> getUserFriends(Integer userId) {
+        List<User> result = new ArrayList<>();
+        if (userId == null) {
+            throw new ValidationException("userId is null");
+        }
+
+        if (!userStorage.existsById(userId)) {
+            throw new NotFoundException("userId not found");
+        }
+
+        User user = userStorage.getById(userId);
+        for (Integer id : user.getFriends()) {
+            User friend = userStorage.getById(id);
+            result.add(friend);
+        }
+
+        return result;
     }
 
     private void validateUser(User user) {

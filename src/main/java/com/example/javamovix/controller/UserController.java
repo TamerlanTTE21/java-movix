@@ -1,17 +1,10 @@
 package com.example.javamovix.controller;
-
-import com.example.javamovix.exception.ValidationException;
 import com.example.javamovix.model.User;
 import com.example.javamovix.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -34,6 +27,23 @@ public class UserController {
     public User updateUser(@RequestBody User user) {
         return userService.updateUser(user);
 
+    }
+
+    @PutMapping("/{userId}/friends/{friendId}")
+    public void addFriend(@PathVariable Integer userId,
+                          @PathVariable Integer friendId) {
+        userService.addFriend(userId, friendId);
+    }
+
+    @DeleteMapping("/{id}/friends/{friendId}")
+    public void removeFriend(@PathVariable Integer id,
+                             @PathVariable Integer friendId) {
+        userService.removeFriend(id, friendId);
+    }
+
+    @GetMapping("/{id}/friends")
+    public Collection<User> getUserFriends(@PathVariable  Integer id) {
+        return userService.getUserFriends(id);
     }
 }
 

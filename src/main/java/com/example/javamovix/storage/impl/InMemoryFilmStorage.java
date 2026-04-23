@@ -1,14 +1,9 @@
-package com.example.javamovix.storage;
-
-import com.example.javamovix.Interface.FilmStorage;
-
+package com.example.javamovix.storage.impl;
 import com.example.javamovix.model.Film;
-
+import com.example.javamovix.storage.FilmStorage;
 import org.springframework.stereotype.Component;
-
 import java.util.Collection;
 import java.util.HashMap;
-
 import java.util.Map;
 
 @Component
@@ -36,12 +31,12 @@ public class InMemoryFilmStorage implements FilmStorage {
     }
 
     @Override
-    public void delete(Integer id) {
-        films.remove(id);
+    public boolean existsById(Integer id) {
+        return films.containsKey(id);
     }
 
     @Override
-    public boolean existsById(Integer id) {
-        return films.containsKey(id);
+    public Film getById(Integer id) {
+        return films.get(id);
     }
 }

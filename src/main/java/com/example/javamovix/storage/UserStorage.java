@@ -1,7 +1,5 @@
-package com.example.javamovix.Interface;
-
+package com.example.javamovix.storage;
 import com.example.javamovix.model.User;
-
 import java.util.Collection;
 
 public interface UserStorage {
@@ -11,10 +9,8 @@ public interface UserStorage {
 
     User update(User user);
 
-    void delete(Integer id);
-
     boolean existsById(Integer id);
 
-    User GetById(Integer id);
+    User getById(Integer id);
 
 }

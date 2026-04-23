@@ -1,7 +1,5 @@
-package com.example.javamovix.Interface;
-
+package com.example.javamovix.storage;
 import com.example.javamovix.model.Film;
-
 import java.util.Collection;
 
 public interface FilmStorage {
@@ -11,7 +9,7 @@ public interface FilmStorage {
 
     Film update(Film film);
 
-    void delete(Integer id);
-
     boolean existsById(Integer id);
+
+    Film getById(Integer id);
 }

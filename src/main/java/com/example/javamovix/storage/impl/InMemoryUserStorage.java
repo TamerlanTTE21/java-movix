@@ -1,9 +1,7 @@
-package com.example.javamovix.storage;
-
-import com.example.javamovix.Interface.UserStorage;
+package com.example.javamovix.storage.impl;
 import com.example.javamovix.model.User;
+import com.example.javamovix.storage.UserStorage;
 import org.springframework.stereotype.Component;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,17 +31,12 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public void delete(Integer id) {
-        users.remove(id);
-    }
-
-    @Override
     public boolean existsById(Integer id) {
         return users.containsKey(id);
     }
 
     @Override
-    public User GetById(Integer id) {
+    public User getById(Integer id) {
         return users.get(id);
     }
 
