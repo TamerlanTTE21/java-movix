@@ -1,14 +1,14 @@
 package com.example.javamovix.service;
+
 import com.example.javamovix.storage.UserStorage;
 import com.example.javamovix.exception.NotFoundException;
 import com.example.javamovix.exception.ValidationException;
 import com.example.javamovix.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -37,7 +37,7 @@ public class UserService {
 
     public void addFriend(Integer userId, Integer friendId) {
         if (userId == null || friendId == null) {
-            throw new ValidationException("null");
+            throw new ValidationException("userId and friendId is null");
         }
 
         if (userId.equals(friendId)) {
@@ -80,7 +80,6 @@ public class UserService {
     }
 
     public Collection<User> getUserFriends(Integer userId) {
-        List<User> result = new ArrayList<>();
         if (userId == null) {
             throw new ValidationException("userId is null");
         }
@@ -89,6 +88,7 @@ public class UserService {
             throw new NotFoundException("userId not found");
         }
 
+        List<User> result = new ArrayList<>();
         User user = userStorage.getById(userId);
         for (Integer id : user.getFriends()) {
             User friend = userStorage.getById(id);
@@ -96,6 +96,26 @@ public class UserService {
         }
 
         return result;
+    }
+
+    public Collection<User> getCommonFriends(Integer id, Integer otherId) {
+        if (id == null || otherId == null) {
+            throw new ValidationException("Id and otherId is null");
+        }
+        User user = userStorage.getById(id);
+        User otherUser = userStorage.getById(otherId);
+        if (user == null || otherUser == null) {
+            throw new ValidationException("user and otherUser is null");
+        }
+
+        Set<Integer> commonFriendsIds = new HashSet<>(user.getFriends());
+        commonFriendsIds.retainAll(otherUser.getFriends());
+        Collection<User> commonFriends = new ArrayList<>();
+        for (Integer friendId : commonFriendsIds) {
+            User friend = userStorage.getById(friendId);
+            commonFriends.add(friend);
+        }
+        return commonFriends;
     }
 
     private void validateUser(User user) {

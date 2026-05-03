@@ -4,20 +4,19 @@ import com.example.javamovix.storage.FilmStorage;
 import com.example.javamovix.exception.NotFoundException;
 import com.example.javamovix.exception.ValidationException;
 import com.example.javamovix.model.Film;
+import com.example.javamovix.storage.UserStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
 public class FilmService {
     private final FilmStorage filmStorage;
+    private final UserService userService;
+    private final UserStorage userStorage;
 
     public Collection<Film> findAllFilms() {
         return filmStorage.findAll();
@@ -40,9 +39,27 @@ public class FilmService {
         return filmStorage.update(film);
     }
 
-    public void addLike(Integer userId, Integer likedId) {
+    public void filmsAddLike(Integer userId, Integer filmId) {
+        if (userId == null || filmId == null) {
+            throw new ValidationException("userId and filmId is null");
+        }
+
+        Film film = filmStorage.getById(filmId);
+
+        if (film == null) {
+            throw new ValidationException("Film not found");
+        }
+
+        if (!userStorage.existsById(userId)) {
+            throw new ValidationException("User not found");
+        }
+
+        film.addLike(userId);
+    }
+
+    public void userAddLike(Integer userId, Integer likedId) {
         if (userId == null || likedId == null) {
-            throw new ValidationException("null");
+            throw new ValidationException("userId and likeId is null");
         }
 
         if (userId.equals(likedId)) {
@@ -62,7 +79,7 @@ public class FilmService {
         friend.getLikes().add(userId);
     }
 
-    public void removeLike(Integer userId, Integer likeId) {
+    public void userRemoveLike(Integer userId, Integer likeId) {
         if (userId == null || likeId == null) {
             throw new ValidationException("userId and likeId is null");
         }
@@ -85,12 +102,12 @@ public class FilmService {
     }
 
     public Collection<Film> getPopularFilms(Integer count) {
-        PopularFilmsComparator popularFilmsComparator = new PopularFilmsComparator();
+
         if (count == null) {
             count = 10;
         }
         return findAllFilms().stream()
-                .sorted(popularFilmsComparator)
+                .sorted((film1, film2) -> film1.getLikes().size() - film1.getLikes().size())
                 .limit(count)
                 .toList();
     }
