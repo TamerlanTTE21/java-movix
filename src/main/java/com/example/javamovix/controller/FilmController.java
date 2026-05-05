@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
-
 @RestController
 @RequestMapping("/films")
 @RequiredArgsConstructor
@@ -29,22 +28,17 @@ public class FilmController {
         return filmService.updateFilm(film);
     }
 
-    @PutMapping("/{id}/like/{userId}")
-    public void userAddLike(@PathVariable Integer id,
-                        @PathVariable Integer userId) {
-        filmService.userAddLike(id, userId);
-    }
 
-    @PutMapping("{id}/like/{filmId}")
+    @PutMapping("{filmId}/like/{userId}")
     public void filmsAddLike(@PathVariable Integer userId,
                              @PathVariable Integer filmId) {
         filmService.filmsAddLike(userId, filmId);
     }
 
-    @DeleteMapping("/{id}/like/{userId}")
-    public void userRemoveLike(@PathVariable Integer id,
+    @DeleteMapping("/{filmId}/like/{userId}")
+    public void filmsRemoveLike(@PathVariable Integer filmId,
                            @PathVariable Integer userId) {
-        filmService.userRemoveLike(id, userId);
+        filmService.filmsRemoveLike(userId, filmId);
     }
 
     @GetMapping("/popular")

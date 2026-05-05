@@ -15,7 +15,6 @@ import java.util.Collection;
 @Service
 public class FilmService {
     private final FilmStorage filmStorage;
-    private final UserService userService;
     private final UserStorage userStorage;
 
     public Collection<Film> findAllFilms() {
@@ -41,64 +40,38 @@ public class FilmService {
 
     public void filmsAddLike(Integer userId, Integer filmId) {
         if (userId == null || filmId == null) {
-            throw new ValidationException("userId and filmId is null");
+            throw new ValidationException("userId or filmId is null");
         }
 
         Film film = filmStorage.getById(filmId);
 
         if (film == null) {
-            throw new ValidationException("Film not found");
+            throw new NotFoundException("Film not found");
         }
 
         if (!userStorage.existsById(userId)) {
-            throw new ValidationException("User not found");
+            throw new NotFoundException("User not found");
         }
 
         film.addLike(userId);
     }
 
-    public void userAddLike(Integer userId, Integer likedId) {
-        if (userId == null || likedId == null) {
-            throw new ValidationException("userId and likeId is null");
+    public void filmsRemoveLike(Integer userId, Integer filmId) {
+        if (userId == null || filmId == null) {
+            throw new ValidationException("userId or filmId is null");
         }
 
-        if (userId.equals(likedId)) {
-            throw new ValidationException("can't add yourself");
+        Film film = filmStorage.getById(filmId);
+
+        if (film == null) {
+            throw new NotFoundException("Film not found");
         }
 
-        if (!filmStorage.existsById(userId)) {
-            throw new NotFoundException("userId not found");
-        }
-        if (!filmStorage.existsById(likedId)) {
-            throw new NotFoundException("friendId not found");
-        }
-        Film user = filmStorage.getById(userId);
-        Film friend = filmStorage.getById(likedId);
-
-        user.getLikes().add(likedId);
-        friend.getLikes().add(userId);
-    }
-
-    public void userRemoveLike(Integer userId, Integer likeId) {
-        if (userId == null || likeId == null) {
-            throw new ValidationException("userId and likeId is null");
+        if (!userStorage.existsById(userId)) {
+            throw new NotFoundException("User not found");
         }
 
-        if (userId.equals(likeId)) {
-            throw new ValidationException("can't remove yourself");
-        }
-
-        if (!filmStorage.existsById(userId)) {
-            throw new NotFoundException("userId not found");
-        }
-        if (!filmStorage.existsById(likeId)) {
-            throw new NotFoundException("friendId not found");
-        }
-        Film user = filmStorage.getById(userId);
-        Film friend = filmStorage.getById(likeId);
-
-        user.getLikes().remove(likeId);
-        friend.getLikes().remove(userId);
+        film.removeLike(userId);
     }
 
     public Collection<Film> getPopularFilms(Integer count) {
@@ -107,7 +80,7 @@ public class FilmService {
             count = 10;
         }
         return findAllFilms().stream()
-                .sorted((film1, film2) -> film1.getLikes().size() - film1.getLikes().size())
+                .sorted((film1, film2) -> film2.getLikes().size() - film1.getLikes().size())
                 .limit(count)
                 .toList();
     }

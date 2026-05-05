@@ -37,7 +37,7 @@ public class UserService {
 
     public void addFriend(Integer userId, Integer friendId) {
         if (userId == null || friendId == null) {
-            throw new ValidationException("userId and friendId is null");
+            throw new ValidationException("userId or friendId is null");
         }
 
         if (userId.equals(friendId)) {
@@ -59,7 +59,7 @@ public class UserService {
 
     public void removeFriend(Integer userId, Integer friendId) {
         if (userId == null || friendId == null) {
-            throw new ValidationException("userId and friendId is null");
+            throw new ValidationException("userId or friendId is null");
         }
 
         if (userId.equals(friendId)) {
@@ -100,12 +100,12 @@ public class UserService {
 
     public Collection<User> getCommonFriends(Integer id, Integer otherId) {
         if (id == null || otherId == null) {
-            throw new ValidationException("Id and otherId is null");
+            throw new ValidationException("Id or otherId is null");
         }
         User user = userStorage.getById(id);
         User otherUser = userStorage.getById(otherId);
         if (user == null || otherUser == null) {
-            throw new ValidationException("user and otherUser is null");
+            throw new ValidationException("user or otherUser is null");
         }
 
         Set<Integer> commonFriendsIds = new HashSet<>(user.getFriends());
