@@ -53,7 +53,7 @@ public class FilmService {
             throw new NotFoundException("User not found");
         }
 
-        film.addLike(userId);
+        filmStorage.addLike(filmId, userId);
     }
 
     public void filmsRemoveLike(Integer userId, Integer filmId) {
@@ -71,7 +71,7 @@ public class FilmService {
             throw new NotFoundException("User not found");
         }
 
-        film.removeLike(userId);
+        filmStorage.removeLike(filmId, userId);
     }
 
     public Collection<Film> getPopularFilms(Integer count) {

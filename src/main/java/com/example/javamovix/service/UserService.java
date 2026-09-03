@@ -50,11 +50,8 @@ public class UserService {
         if (!userStorage.existsById(friendId)) {
             throw new NotFoundException("friendId not found");
         }
-        User user = userStorage.getById(userId);
-        User friend = userStorage.getById(friendId);
-
-        user.getFriends().add(friendId);
-        friend.getFriends().add(userId);
+        userStorage.addFriend(userId, friendId);
+        userStorage.addFriend(friendId, userId);
     }
 
     public void removeFriend(Integer userId, Integer friendId) {
@@ -72,11 +69,8 @@ public class UserService {
         if (!userStorage.existsById(friendId)) {
             throw new NotFoundException("friendId not found");
         }
-        User user = userStorage.getById(userId);
-        User friend = userStorage.getById(friendId);
-
-        user.getFriends().remove(friendId);
-        friend.getFriends().remove(userId);
+        userStorage.removeFriend(userId, friendId);
+        userStorage.removeFriend(friendId, userId);
     }
 
     public Collection<User> getUserFriends(Integer userId) {

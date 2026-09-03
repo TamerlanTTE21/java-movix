@@ -12,4 +12,8 @@ public interface FilmStorage {
     boolean existsById(Integer id);
 
     Film getById(Integer id);
+
+    void addLike(Integer filmId, Integer userId);
+
+    void removeLike(Integer filmId, Integer userId);
 }
